@@ -33,8 +33,6 @@ adonis(weighted-unifrac-dist ~ timepoint * treatment, data=ps_setu.rarefied_RA, 
 
 
 
-#venn diagram
-
 #heat map
 library(ComplexHeatmap)
 data <- read.csv("data.tsv", sep= "\t", header = TRUE,na.strings = "NA")
@@ -44,9 +42,6 @@ Heatmap(data,
         column_title = "Treatments", row_title = "Carbon sources",
         row_names_gp = gpar(fontsize = 7) 
 
-
-
-#Distance-based redundancy analysis
 
 
 #Sankey

@@ -1,4 +1,4 @@
-library(microbiome)
+library(phyloseq) 
 #Bar plot
 pyloseq-relative-abundance-phylum <-aggregate_rare(phyloseq-relative-abundance, level = "Phylum", detection = 1/100, prevalence = 5/100)
 PLot_bar <- plot_bar(pyloseq-relative-abundance-phylum, x="treatment", fill="Phylum") + geom_bar(aes(color=Phylum, fill=Phylum), stat="identity", position="stack")+ 
@@ -7,7 +7,6 @@ PLot_bar + facet_grid(timepoint~ .)
 
 
 #alpha Diversity
-library(microbiome)
 library(phyloseq) 
 plot_richness(pyloseq, measures=c("Chao1", "Shannon","Observed"), x="treatment", color="timepoint") + geom_boxplot()
 
@@ -21,6 +20,10 @@ Beta-plot <- plot_ordination(pyloseq-relative-abundance-phylum, ordination1, typ
 Beta-plot + facet_wrap(~treatment) #, nrow=3)
 Beta-plot + facet_wrap(~timepoint)  #, nrow=2)
 
+
+
+
+
 #PERMANOVA
 library(vegan)
 weighted-unifrac-dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
@@ -29,6 +32,21 @@ adonis(weighted-unifrac-dist ~ sample_data(pyloseq-relative-abundance-phylum)$ti
 adonis(weighted-unifrac-dist ~ timepoint * treatment, data=ps_setu.rarefied_RA, permutations=99)
 
 
+
+#venn diagram
+
+#heat map
+library(ComplexHeatmap)
+data <- read.csv("data.tsv", sep= "\t", header = TRUE,na.strings = "NA")
+scaled_data <- scale(data)
+Heatmap(data, 
+        name = "out", 
+        column_title = "Treatments", row_title = "Carbon sources",
+        row_names_gp = gpar(fontsize = 7) 
+
+
+
+#Distance-based redundancy analysis
 
 
 #Sankey

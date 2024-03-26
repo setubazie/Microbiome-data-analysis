@@ -4,3 +4,49 @@ pyloseq-relative-abundance-phylum <-aggregate_rare(phyloseq-relative-abundance, 
 PLot_bar <- plot_bar(pyloseq-relative-abundance-phylum, x="treatment", fill="Phylum") + geom_bar(aes(color=Phylum, fill=Phylum), stat="identity", position="stack")+ 
   labs(x = "Treatments", y = "Relative abundance", title = "Relative abundance data")
 PLot_bar + facet_grid(timepoint~ .)
+
+
+#alpha Diversity
+library(microbiome)
+library(phyloseq) 
+plot_richness(pyloseq, measures=c("Chao1", "Shannon","Observed"), x="treatment", color="timepoint") + geom_boxplot()
+
+
+
+#Beta Diversity
+wunifrac_dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
+ordination1 = ordinate(pyloseq-relative-abundance-phylum, method="PCoA", distance=wunifrac_dist)
+Beta-plot <- plot_ordination(pyloseq-relative-abundance-phylum, ordination1, type="samples", color="treatment", 
+                shape="timepoint", title="wunifrac") + geom_point(size=3) + theme(aspect.ratio=1)
+Beta-plot + facet_wrap(~treatment) #, nrow=3)
+Beta-plot + facet_wrap(~timepoint)  #, nrow=2)
+
+#PERMANOVA
+library(vegan)
+weighted-unifrac-dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
+adonis(weighted-unifrac-dist ~ sample_data(pyloseq-relative-abundance-phylum)$treatment)
+adonis(weighted-unifrac-dist ~ sample_data(pyloseq-relative-abundance-phylum)$timepoint)
+adonis(weighted-unifrac-dist ~ timepoint * treatment, data=ps_setu.rarefied_RA, permutations=99)
+
+
+
+
+#Sankey
+library(ggalluvial)
+library("xlsx")
+Sankey <- read.xlsx("data.xlsx", 20)
+Sankey$Treat %<>% factor(., levels = c("Treat1", "Treat2", "Treat3"))
+
+Sankey$Treat <- factor(Sankey$Treat)
+Sankey$Phylum <- factor(Sankey$Phylum)
+Sankey$Class <- factor(Sankey$Class)
+ggplot(data = Sankey,
+       aes(axis1 = Treat, axis2 = Phylum, axis3 = Class,
+           y = Relative_abundance)) +
+  scale_x_discrete(limits = c("Treat", "Phylum", "Class"), expand = c(.2, .05)) +
+  xlab("composition") +
+  geom_alluvium(aes(fill = Class)) +
+  geom_stratum() +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  theme_minimal()
+

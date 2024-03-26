@@ -1,1 +1,5 @@
-
+library(qiime2R)
+Phyloseq<-qza_to_phyloseq(features="Feature-table.qza", 
+                                   tree="rooted-tree.qza",
+                                   taxonomy="taxonomy.qza", 
+                                   metadata = "Metadata.tsv")

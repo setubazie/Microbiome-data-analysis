@@ -12,6 +12,7 @@ plot_richness(pyloseq, measures=c("Chao1", "Shannon","Observed"), x="treatment",
 
 
 
+
 #Beta Diversity
 wunifrac_dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
 ordination1 = ordinate(pyloseq-relative-abundance-phylum, method="PCoA", distance=wunifrac_dist)

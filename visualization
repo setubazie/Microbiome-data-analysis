@@ -50,3 +50,31 @@ ggplot(data = Sankey,
   geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
   theme_minimal()
 
+
+
+
+
+
+# Line graph with error bars
+library("xlsx")
+library(dplyr)
+library(ggplot2)
+import-data <- read.xlsx("data.xlsx", 1)
+# Set the order of periods as a custom factor
+import-data$period <- factor(import-data$period, levels = c("24h", "48h", "72h", "96h", "120h", "144h"))
+
+import-data <- import-data %>%
+  group_by(Treatment, period) %>%
+  summarize(
+    Avg_AWCD = mean(AWCD),
+    SE_AWCD = sd(AWCD) / sqrt(n())
+  )
+
+ggplot(import-data, aes(x = period, y = Avg_AWCD, group = Treatment, color = Treatment)) +
+  geom_line() +
+  geom_errorbar(aes(ymin = Avg_AWCD - SE_AWCD, ymax = Avg_AWCD + SE_AWCD), width = 0.1) +
+  labs(title = "Average AWCD by Treatment and Period",
+       x = "Incubation period (h)",
+       y = "AWCD (Absorbance at 490 nm)",
+       color = "Treatment") +
+  theme_minimal()

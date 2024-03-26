@@ -1,0 +1,6 @@
+library(microbiome)
+#Bar plot
+pyloseq-relative-abundance-phylum <-aggregate_rare(phyloseq-relative-abundance, level = "Phylum", detection = 1/100, prevalence = 5/100)
+PLot_bar <- plot_bar(pyloseq-relative-abundance-phylum, x="treatment", fill="Phylum") + geom_bar(aes(color=Phylum, fill=Phylum), stat="identity", position="stack")+ 
+  labs(x = "Treatments", y = "Relative abundance", title = "Relative abundance data")
+PLot_bar + facet_grid(timepoint~ .)

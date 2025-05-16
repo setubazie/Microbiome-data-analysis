@@ -1,3 +1,12 @@
+library(qiime2R)
+Phyloseq<-qza_to_phyloseq(features="Feature-table.qza", 
+                                   tree="rooted-tree.qza",
+                                   taxonomy="taxonomy.qza", 
+                                   metadata = "Metadata.tsv")
+
+
+phyloseq-rel-abund <- transform_sample_counts(phyloseq, function(x) x / sum(x))
+
 library(phyloseq) 
 #Bar plot
 pyloseq-relative-abundance-phylum <-aggregate_rare(phyloseq-relative-abundance, level = "Phylum", detection = 1/100, prevalence = 5/100)

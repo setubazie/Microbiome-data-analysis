@@ -1,0 +1,41 @@
+# Step 1: 
+sample-id,absolute-filepath,directionSample1,/mnt/d/setu/Sample1_R1.fastq.gz,forwardSample1,/mnt/d/setu/Sample1_R2.fastq.gz,reverse
+
+# Step 2: 
+qiime tools import \  --type 'SampleData[PairedEndSequencesWithQuality]' \  --input-path manifest_Sample1.csv \  --output-path paired-end-demux_Sample1.qza \  --input-format PairedEndFastqManifestPhred33V2
+
+# Step 3: 
+qiime demux summarize \  --i-data paired-end-demux_Sample1.qza \  --o-visualization demux_Sample1.qzv
+
+# Step 4: 
+qiime dada2 denoise-paired \  --i-demultiplexed-seqs paired-end-demux_Sample1.qza \  --p-trim-left-f 0 \  --p-trim-left-r 0 \  --p-trunc-len-f 240 \  --p-trunc-len-r 200 \  --o-table table_Sample1.qza \  --o-representative-sequences rep-seqs_Sample1.qza \  --o-denoising-stats denoise-stats_Sample1.qza
+
+# Step 5:
+qiime feature-table merge \  --i-tables table_Sample1.qza table_Sample2.qza ... table_Sample50.qza \  --o-merged-table table.qza
+
+# Step 6:
+qiime feature-table merge-seqs \  --i-data rep-seqs_Sample1.qza rep-seqs_Sample2.qza ... rep-seqs_Sample50.qza \  --o-merged-data rep-seqs.qza
+
+# Step 7:
+qiime feature-table summarize \  --i-table table.qza \  --o-visualization table.qzv
+qiime feature-table tabulate-seqs \  --i-data rep-seqs.qza \  --o-visualization rep-seqs.qzv
+
+qiime tools export \
+  --input-path table.qza \
+  --output-path exported-feature-table
+
+biom convert \
+  -i exported-feature-table/feature-table.biom \
+  -o feature-table.tsv \
+  --to-tsv
+
+# Step 8:
+qiime feature-classifier classify-sklearn \  --i-classifier silva-138-99-nb-classifier.qza \  --i-reads rep-seqs.qza \  --o-classification taxonomy.qza
+qiime metadata tabulate \  --m-input-file taxonomy.qza \  --o-visualization taxonomy.qzv
+
+qiime tools export \
+  --input-path taxonomy.qza \
+  --output-path exported-taxonomy
+
+mv exported-taxonomy/taxonomy.tsv taxonomy.tsv
+

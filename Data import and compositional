@@ -4,4 +4,4 @@ Phyloseq<-qza_to_phyloseq(features="Feature-table.qza",
                                    metadata = "Metadata.tsv")
 
 
-phyloseq-rel-abund <- transform_sample_counts(phyloseq, function(x) x / sum(x))
+

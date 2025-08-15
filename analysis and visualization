@@ -1,11 +1,7 @@
 library(qiime2R)
 Phyloseq<-qza_to_phyloseq(features="Feature-table.qza", 
-                                   tree="rooted-tree.qza",
-                                   taxonomy="taxonomy.qza", 
+                                  taxonomy="taxonomy.qza", 
                                    metadata = "Metadata.tsv")
-
-
-phyloseq-rel-abund <- transform_sample_counts(phyloseq, function(x) x / sum(x))
 
 
 phyloseq-rel-abund <- transform_sample_counts(phyloseq, function(x) x / sum(x))
@@ -26,23 +22,10 @@ plot_richness(pyloseq, measures=c("Chao1", "Shannon","Observed"), x="treatment",
 
 
 #Beta Diversity
-wunifrac_dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
-ordination1 = ordinate(pyloseq-relative-abundance-phylum, method="PCoA", distance=wunifrac_dist)
+Beta = phyloseq::distance(pyloseq-relative-abundance-phylum)
+ordination1 = ordinate(pyloseq-relative-abundance-phylum, method="PCoA", distance=Beta)
 Beta-plot <- plot_ordination(pyloseq-relative-abundance-phylum, ordination1, type="samples", color="treatment", 
                 shape="timepoint", title="wunifrac") + geom_point(size=3) + theme(aspect.ratio=1)
-Beta-plot + facet_wrap(~treatment) #, nrow=3)
-Beta-plot + facet_wrap(~timepoint)  #, nrow=2)
-
-
-
-
-
-#PERMANOVA
-library(vegan)
-weighted-unifrac-dist = phyloseq::distance(pyloseq-relative-abundance-phylum, method="unifrac", weighted=T)
-adonis(weighted-unifrac-dist ~ sample_data(pyloseq-relative-abundance-phylum)$treatment)
-adonis(weighted-unifrac-dist ~ sample_data(pyloseq-relative-abundance-phylum)$timepoint)
-adonis(weighted-unifrac-dist ~ timepoint * treatment, data=ps_setu.rarefied_RA, permutations=99)
 
 
 

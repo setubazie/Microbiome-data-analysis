@@ -14,6 +14,10 @@ qiime dada2 denoise-single --i-demultiplexed-seqs single-end-demux.qza --p-trim-
 
 
 
+
+
+
+
 # Step 5:
 qiime feature-table merge \  --i-tables table_Sample1.qza table_Sample2.qza ... table_Sample50.qza \  --o-merged-table table.qza
 

@@ -2,10 +2,11 @@
 sample-id,absolute-filepath,directionSample1,/mnt/d/setu/Sample1_R1.fastq.gz,forwardSample1,/mnt/d/setu/Sample1_R2.fastq.gz,reverse
 
 # Step 2: 
-qiime tools import \  --type 'SampleData[PairedEndSequencesWithQuality]' \  --input-path manifest_Sample1.csv \  --output-path paired-end-demux_Sample1.qza \  --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[SequencesWithQuality]' --input-path manifest.tsv --output-path single-end-demux --input-format SingleEndFastqManifestPhred33V2
 
 # Step 3: 
-qiime demux summarize \  --i-data paired-end-demux_Sample1.qza \  --o-visualization demux_Sample1.qzv
+qiime demux summarize --i-data single-end-demux.qza --o-visualization demux_sample.qzv
+
 
 # Step 4: 
 qiime dada2 denoise-paired \  --i-demultiplexed-seqs paired-end-demux_Sample1.qza \  --p-trim-left-f 0 \  --p-trim-left-r 0 \  --p-trunc-len-f 240 \  --p-trunc-len-r 200 \  --o-table table_Sample1.qza \  --o-representative-sequences rep-seqs_Sample1.qza \  --o-denoising-stats denoise-stats_Sample1.qza

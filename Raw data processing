@@ -9,7 +9,10 @@ qiime demux summarize --i-data single-end-demux.qza --o-visualization demux_samp
 
 
 # Step 4: 
-qiime dada2 denoise-paired \  --i-demultiplexed-seqs paired-end-demux_Sample1.qza \  --p-trim-left-f 0 \  --p-trim-left-r 0 \  --p-trunc-len-f 240 \  --p-trunc-len-r 200 \  --o-table table_Sample1.qza \  --o-representative-sequences rep-seqs_Sample1.qza \  --o-denoising-stats denoise-stats_Sample1.qza
+qiime dada2 denoise-single --i-demultiplexed-seqs single-end-demux.qza --p-trim-left 20 --p-trunc-len-f 220 --o-table table.qza --o-representative-sequences rep-seq.qza --o-denoising-stats denos-stat.qza
+
+
+
 
 # Step 5:
 qiime feature-table merge \  --i-tables table_Sample1.qza table_Sample2.qza ... table_Sample50.qza \  --o-merged-table table.qza
